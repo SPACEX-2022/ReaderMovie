@@ -3,42 +3,73 @@ var postData = require('../../../data/posts-data.js');
 
 Page({
   data:{
-
+    isPlayingMusic: false
   },
   onLoad:function(options){
-    // wx.clearStorageSync();
+    // 页面初始化 options为页面跳转所带来的参数
     var postId = options.id;
     this.data.postId = postId;
     var postsData = postData.postList[postId];
-    // console.log(postsData);
     this.setData({
       postData: postsData
     });
-    // this.data.postData = postsData;
 
     var postsCollected = wx.getStorageSync('posts_collected');
-    // console.log(postsCollected);
+    if(!postsCollected){
+      postsCollected = {};
+    }
     if(postsCollected[postId]){
       var collected = postsCollected[postId];
       this.setData({
         collected: collected
       })
     }else{
-      // var postsCollected = {};
       postsCollected[postId] = false;
       wx.setStorageSync('posts_collected', postsCollected);
     }
-    // 页面初始化 options为页面跳转所带来的参数
+    var that = this;
+    wx.getBackgroundAudioPlayerState({
+      success:function(res){
+        if(res.dataUrl && res.dataUrl === postsData.music.dataUrl){
+          that.setData({
+            isPlayingMusic: true
+          })
+        }
+      }
+    });
+    wx.onBackgroundAudioPlay(function() {
+      that.setData({
+        isPlayingMusic: true
+      });
+    });
+    wx.onBackgroundAudioPause(function() {
+      that.setData({
+        isPlayingMusic: false
+      });
+    });
   },
   onCollectionTap: function(event){
-    // console.log(123);
     var postsCollected = wx.getStorageSync('posts_collected');
     postsCollected[this.data.postId] = !postsCollected[this.data.postId];
-    // wx.setStorageSync('posts_collected', postsCollected);
-    // this.setData({
-    //   collected: postsCollected[this.data.postId]
-    // });
     this.showToast(postsCollected, postsCollected[this.data.postId]);
+  },
+  onShareTap: function(event){
+    var itemList = [
+                      '分享给微信好友',
+                      '分享到朋友圈',
+                      '分享到QQ',
+                      '分享到微博'
+                    ];
+    wx.showActionSheet({
+      itemList: itemList,
+      itemColor: '#405f80',
+      success: function(res){
+        wx.showModal({
+          title: '用户' + itemList[res.tapIndex],
+          content: '用户是否取消?'+res.cancel+",现在无法实现分享功能"
+        })
+      }
+    })
   },
   showModal: function(postsCollected, postCollected){
     var that = this;
@@ -71,6 +102,33 @@ Page({
       duration: 1000,
       icon: 'success'
     })
+  },
+  onMusicTap: function(event){
+    var isPlayingMusic = this.data.isPlayingMusic;
+    var data = postData.postList[this.data.postId];
+    if(isPlayingMusic){
+      wx.pauseBackgroundAudio();
+      this.setData({
+        isPlayingMusic: false
+      })
+    }else{
+      wx.getBackgroundAudioPlayerState({
+        success: function(res){
+          if(res.status === 0){
+            var currentPosition = res.currentPosition;
+            wx.playBackgroundAudio(data.music);
+            wx.seekBackgroundAudio({
+              position: currentPosition
+            });
+          }else{
+            wx.playBackgroundAudio(data.music);
+          }
+        }
+      })
+      this.setData({
+        isPlayingMusic: true
+      });   
+    }
   },
   onReady:function(){
     // 页面渲染完成
