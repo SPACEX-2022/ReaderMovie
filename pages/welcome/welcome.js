@@ -3,8 +3,8 @@ Page({
         // wx.navigateTo({
         //     url: "../posts/post"
         // });
-
-        wx.redirectTo({
+        
+        wx.navigateTo({
           url: '../posts/post',
           success: function(res){
             // success

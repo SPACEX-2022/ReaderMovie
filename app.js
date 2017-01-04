@@ -3,7 +3,22 @@ App({
         g_musicStatus: false
     },
     onLaunch: function () {
-        
+        // {
+        //     let a = 1;
+        //     var b = 2;
+        // }
+        // try{
+        //     // console.log(a,b);
+        //     throw(e.name);
+        // }catch(e){
+        //     for(var p in e){
+        //         console.log(p);
+        //     }
+            
+        //         console.log(e);
+
+        // }
+        // console.log(123);
     },
     onShow: function () {
         
