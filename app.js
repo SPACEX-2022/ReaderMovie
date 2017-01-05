@@ -1,6 +1,7 @@
 App({
     globalData: {
-        g_musicStatus: false
+        g_musicStatus: false,
+        doubanBase: "https://api.douban.com"
     },
     onLaunch: function () {
         // {
