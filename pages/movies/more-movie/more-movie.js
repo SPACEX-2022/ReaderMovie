@@ -26,8 +26,9 @@ Page({
     }
     this.data.requestUrl = dataUrl;
     utils.http(dataUrl, this.processDoubanData);
+    wx.showNavigationBarLoading();
   },
-  onScrollLower: function(event){
+  onReachBottom: function(event){
     var nextUrl = this.data.requestUrl + '?start=' + this.data.totalCount + '&count=20';
     utils.http(nextUrl, this.processDoubanData);
     wx.showNavigationBarLoading();

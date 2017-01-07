@@ -1,0 +1,24 @@
+/* pages/movies/movie-detail/movie-detail.wxss */
+@import "../stars/stars-template.wxss";
+
+.container{
+    display: flex;
+    flex-direction: column;
+}
+
+.head-img{
+    width: 100%;
+    height: 320rpx;
+    -webkit-filter: blur(20px);
+}
+
+.head-img-hover{
+    width: 100%;
+    height: 320rpx;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+}
+

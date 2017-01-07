@@ -5,7 +5,10 @@ Page({
   data:{
     'inTheaters':{},
     'comingSoon':{},
-    'top250':{}
+    'top250':{},
+    containerShow: true,
+    searchPanelShow: false,
+    searchResult: {}
   },
   onLoad:function(options){
     // 页面初始化 options为页面跳转所带来的参数
@@ -37,6 +40,29 @@ Page({
       }
     })
   },
+  onCancelImgTap: function(event){
+    this.setData({
+      containerShow: true,
+      searchPanelShow: false
+    });
+  },
+  onBindFocus: function(event){
+    this.setData({
+      containerShow: false,
+      searchPanelShow: true
+    });
+  },
+  onBindBlur: function(event){
+    var text = event.detail.value;
+    var searchUrl = app.globalData.doubanBase + "/v2/movie/search?q=" + text;
+    this.getMovieListData(searchUrl, 'searchResult', '');
+  },
+  onMovieTap: function(event){
+    var movieId = event.currentTarget.dataset.movieId;
+    wx.navigateTo({
+      url: 'movie-detail/movie-detail?movieId=' + movieId
+    });
+  },
   processDoubanData: function(moviesDouban, settedKey, categoryTitle){
     var movies = [];
     for(var idx in moviesDouban.subjects){
@@ -67,7 +93,6 @@ Page({
     wx.navigateTo({
       url: 'more-movie/more-movie?category=' + category
     });
-
   },
   onReady:function(){
     // 页面渲染完成

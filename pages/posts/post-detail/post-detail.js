@@ -47,6 +47,11 @@ Page({
         isPlayingMusic: false
       });
     });
+    wx.onBackgroundAudioStop(function() {
+      that.setData({
+        isPlayingMusic: false
+      });
+    });
   },
   onCollectionTap: function(event){
     var postsCollected = wx.getStorageSync('posts_collected');
