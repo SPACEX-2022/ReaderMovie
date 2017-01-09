@@ -40,6 +40,12 @@ Page({
     utils.http(refreshUrl, this.processDoubanData);
     wx.showNavigationBarLoading();
   },
+  onMovieTap: function(event){
+    var movieId = event.currentTarget.dataset.movieId;
+    wx.navigateTo({
+      url: '../movie-detail/movie-detail?movieId=' + movieId
+    });
+  },
   processDoubanData: function(moviesDouban){
     var movies = [];
     for(var idx in moviesDouban.subjects){
